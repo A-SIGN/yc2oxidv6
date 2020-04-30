@@ -405,6 +405,8 @@ class Asign_YellowCubeCore extends FrontendController
 
         $oObject->Order->PartnerAddress->Partner->Title            = $sSalutation;
         $oObject->Order->PartnerAddress->Partner->Name1            = $oOrderUser->oxuser__oxfname->value . " " . $oOrderUser->oxuser__oxlname->value;
+        $oObject->Order->PartnerAddress->Partner->Name2            = $oOrderUser->oxuser__oxcompany->value;
+        $oObject->Order->PartnerAddress->Partner->Name3            = $oOrderUser->oxuser__oxaddinfo->value;
         $oObject->Order->PartnerAddress->Partner->Street           = $oOrderUser->oxuser__oxstreet->value . ", " . $oOrderUser->oxuser__oxstreetnr->value;
         $oObject->Order->PartnerAddress->Partner->CountryCode      = $countryISO;
         $oObject->Order->PartnerAddress->Partner->ZIPCode          = $this->verifyZipStatus($oOrderUser->oxuser__oxzip->value, $countryISO);

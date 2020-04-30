@@ -41,7 +41,7 @@ class Asign_Yellowcube_Oxorder extends Asign_Yellowcube_Oxorder_parent
     * Path to pdf folder
     * @var string
     */
-    public $_sYellowcubePdfPath = "/export/asign/pdf/";
+    public $_sYellowcubePdfPath = "export/asign/pdf/";
 
     /**
      * Constructor for this class
@@ -113,6 +113,16 @@ class Asign_Yellowcube_Oxorder extends Asign_Yellowcube_Oxorder_parent
 
             ob_start();
             $sShopDir = Registry::getConfig()->getConfigParam('sShopDir');
+            $target_path = $sShopDir . $this->_sYellowcubePdfPath;
+            //  if directory does not exist then create it
+            if (!file_exists($target_path)) {
+                mkdir($target_path, 0777, true);
+            } else {
+                //check if the folder is writable: if not set permission
+                if (!is_writable($target_path)) {
+                    chmod($target_path, 0777);
+                }
+            }
             $this->genPDF($sShopDir . $this->_sYellowcubePdfPath . $sFilename, $iOrderLang, true);
             ob_get_contents();
             ob_end_clean();

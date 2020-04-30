@@ -229,6 +229,9 @@ class Asign_YellowCube_Model extends MultiLanguageModel
 
             $this->resetInventoryData();
 
+            $tQuery = "truncate table `asign_ycinventory`";
+            DatabaseProvider::getDb()->execute($tQuery);
+
             foreach ($aResponseData->ArticleList->Article as $article) {
                 // format the response data
                 $aFormData = $this->frameResponseToArray($article);
@@ -325,8 +328,11 @@ class Asign_YellowCube_Model extends MultiLanguageModel
                 DatabaseProvider::getDb()->execute($iQuery);
 
                 // update the stock information in oxarticles table
-                $iStock = (int) $aData['stockval'];
-                DatabaseProvider::getDb()->execute("update `oxarticles` set `oxstock` = '" . $iStock . "' where `oxartnum` = '" . $aData['artnum'] . "' and `oxactive` = 1");
+                $allParams = unserialize($aData['allparams']);
+                if($allParams['StorageLocation'] == "YAFS" && ($allParams['StockType'] == "0" || $allParams['StockType'] == "F" || $allParams['StockType'] == "")) {
+                    $iStock = (int) $aData['stockval'];
+                    DatabaseProvider::getDb()->execute("update `oxarticles` set `oxstock` = '" . $iStock . "' where `oxartnum` = '" . $aData['artnum'] . "' and `oxactive` = 1");
+                }
 
                 // save the last updated date
                 $updateDate = date('Y-m-d H:i:s');

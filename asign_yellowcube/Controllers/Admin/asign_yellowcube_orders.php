@@ -193,13 +193,20 @@ class Asign_YellowCube_Orders extends AdminController
         //set the targetpath: where file to be uploaded
         $sPath = Registry::getConfig()->getConfigParam("sShopDir");
         $target_path = $sPath . $this->sUploadPathPdf;
+
+        //  if directory does not exist then create it
+        if (!file_exists($target_path)) {
+            mkdir($target_path, 0777, true);
+        } else {
+             //check if the folder is writable: if not set permission
+            if (!is_writable($target_path)) {
+                chmod($target_path, 0777);
+            }
+        }
+
+
         $target_path = $target_path.basename($filename);
         $blDocDelete = Asign_SoapClientApi::isYCDeleteOrderFile();
-
-        //check if the folder is writable: if not set permission
-        if (!is_writable($target_path)) {
-            chmod($target_path, 0777);
-        }
 
         //move the file to targetpath
         try {
